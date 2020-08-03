@@ -1,7 +1,7 @@
 import Vapor
 import Logger
 
-open class WebsocketClients {
+final open class WebsocketClients {
     var eventLoop: EventLoop
     var storage: [UUID: WebSocketClient]
     
