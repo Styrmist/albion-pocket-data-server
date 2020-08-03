@@ -1,10 +1,3 @@
-//
-//  WebSocketClient.swift
-//  
-//
-//  Created by Kirill on 03.08.2020.
-//
-
 import Vapor
 
 open class WebSocketClient {
