@@ -1,9 +1,17 @@
-import Fluent
-import FluentPostgresDriver
+//import Fluent
+//import FluentPostgresDriver
 import Vapor
 
-// configures your application
 public func configure(_ app: Application) throws {
+    
+    getEnvironmentVar(<#T##name: String##String#>)
+    
+    app.http.server.configuration.hostname = "127.0.0.1"
+    app.http.server.configuration.port = 9876
+    
+    let appSystem = AppSystem(eventLoop: app.eventLoopGroup.next())
+    try routes(app, appSystem: appSystem)
+    
     // uncomment to serve files from /Public folder
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 
@@ -15,7 +23,9 @@ public func configure(_ app: Application) throws {
 //    ), as: .psql)
 //
 //    app.migrations.add(CreateTodo())
+}
 
-    // register routes
-//    try routes(app)
+func getEnvironmentVar(_ name: String) -> String? {
+    guard let rawValue = getenv(name) else { return nil }
+    return String(utf8String: rawValue)
 }
