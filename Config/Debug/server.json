@@ -1,8 +1,5 @@
-//
-//  File.swift
-//  
-//
-//  Created by Kirill on 26.08.2020.
-//
-
-import Foundation
+{
+    "host": "127.0.0.1",
+    "port": 9000,
+    "securityLayer": "none",
+}
