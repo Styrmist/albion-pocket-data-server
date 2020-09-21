@@ -4,12 +4,20 @@ import Vapor
 
 public func configure(_ app: Application) throws {
     
-    getEnvironmentVar(<#T##name: String##String#>)
+    guard let environment = try? Environment.detect() else {
+        return
+    }
     
-    app.http.server.configuration.hostname = "127.0.0.1"
-    app.http.server.configuration.port = 9876
+    if environment.isRelease {
+        app.http.server.configuration.hostname = "127.0.0.1"
+        app.http.server.configuration.port = 9876
+    } else {
+        app.http.server.configuration.hostname = "127.0.0.1"
+        app.http.server.configuration.port = 9876
+    }
     
-    let appSystem = AppSystem(eventLoop: app.eventLoopGroup.next())
+    
+    let appSystem = AppS ystem(eventLoop: app.eventLoopGroup.next())
     try routes(app, appSystem: appSystem)
     
     // uncomment to serve files from /Public folder
@@ -29,3 +37,4 @@ func getEnvironmentVar(_ name: String) -> String? {
     guard let rawValue = getenv(name) else { return nil }
     return String(utf8String: rawValue)
 }
+
