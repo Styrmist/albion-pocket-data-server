@@ -19,8 +19,8 @@ final class AppSystem {
         }
         ws.onText { [unowned self] ws, buffer in
             guard let json = buffer.parseJSONString else {
-                let logger = Logger(label: "WebSocket.Logger")
-//                logger.log(level: Logger.Level.detect(from: &Environment.detect().), "asdasdas")
+//                let logger = Logger(label: "WebSocket.Logger")
+//                logger.log(level: Logger.Level.detect(from: &Environment.detect()), "asdasdas")
                 return
             }
                 do {

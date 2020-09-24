@@ -17,7 +17,7 @@ public func configure(_ app: Application) throws {
     }
     
     
-    let appSystem = AppS ystem(eventLoop: app.eventLoopGroup.next())
+    let appSystem = AppSystem(eventLoop: app.eventLoopGroup.next())
     try routes(app, appSystem: appSystem)
     
     // uncomment to serve files from /Public folder
