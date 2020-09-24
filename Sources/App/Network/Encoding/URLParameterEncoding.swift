@@ -10,7 +10,10 @@ import Foundation
 public struct URLParameterEncoder: ParameterEncoder {
     public func encode(urlRequest: inout URLRequest, with parameters: Parameters) throws {
         
-        guard let url = urlRequest.url else { throw NetworkError.missingURL }
+        guard let url = urlRequest.url else {
+            PackageLogger.warning("Missing url in request: \(urlRequest)")
+            throw NetworkError.missingURL
+        }
         
         if var urlComponents = URLComponents(url: url,
                                              resolvingAgainstBaseURL: false), !parameters.isEmpty {

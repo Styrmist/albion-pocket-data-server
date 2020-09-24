@@ -20,6 +20,7 @@ enum NetworkResponse:String {
     case failed = "Network request failed."
     case noData = "Response returned with no data to decode."
     case unableToDecode = "Could not decode the response."
+    case noNetworkConnection = "Check network connection."
 }
 
 enum Result<String>{
@@ -34,7 +35,8 @@ struct NetworkManager {
     func getLastCommit(user: String, repository: String, filePath: String, completion: @escaping (_ commit: Date?,_ error: String?)->()){
         router.request(.lastCommit(user: user, repository: repository, filePath: filePath)) { data, response, error in
             if error != nil {
-                completion(nil, "Check your network connection.")
+                PackageLogger.warning(NetworkResponse.noNetworkConnection.rawValue)
+                completion(nil, NetworkResponse.noNetworkConnection.rawValue)
             }
             
             if let response = response as? HTTPURLResponse {
@@ -42,20 +44,22 @@ struct NetworkManager {
                 switch result {
                 case .success:
                     guard let responseData = data else {
+                        PackageLogger.warning(NetworkResponse.noData.rawValue)
                         completion(nil, NetworkResponse.noData.rawValue)
                         return
                     }
                     do {
-                        //logger print(responseData)
-                        //let jsonData = try JSONSerialization.jsonObject(with: responseData, options: .mutableContainers)
-                        //logger print(jsonData)
+                        PackageLogger.trace(responseData)
+                        let jsonData = try JSONSerialization.jsonObject(with: responseData, options: .mutableContainers)
+                        PackageLogger.trace(jsonData)
                         let apiResponse = try JSONDecoder().decode(CommitElement.self, from: responseData)
                         completion(apiResponse.commit?.author?.date, nil)
                     }catch {
-                        print(error)
+                        PackageLogger.warning(NetworkResponse.unableToDecode.rawValue)
                         completion(nil, NetworkResponse.unableToDecode.rawValue)
                     }
                 case .failure(let networkFailureError):
+                    PackageLogger.warning(networkFailureError)
                     completion(nil, networkFailureError)
                 }
             }

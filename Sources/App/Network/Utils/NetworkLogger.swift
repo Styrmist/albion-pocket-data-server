@@ -9,9 +9,7 @@ import Foundation
 
 class NetworkLogger {
     static func log(request: URLRequest) {
-        
-        print("\n - - - - - - - - - - OUTGOING - - - - - - - - - - \n")
-        defer { print("\n - - - - - - - - - -  END - - - - - - - - - - \n") }
+        PackageLogger.debug("Outgoing request: \(request)")
         
         let urlAsString = request.url?.absoluteString ?? ""
         let urlComponents = NSURLComponents(string: urlAsString)
@@ -22,7 +20,7 @@ class NetworkLogger {
         let host = "\(urlComponents?.host ?? "")"
         
         var logOutput = """
-                        \(urlAsString) \n\n
+                        \(urlAsString)\n
                         \(method) \(path)?\(query) HTTP/1.1 \n
                         HOST: \(host)\n
                         """
@@ -33,7 +31,7 @@ class NetworkLogger {
             logOutput += "\n \(NSString(data: body, encoding: String.Encoding.utf8.rawValue) ?? "")"
         }
         
-        print(logOutput)
+        PackageLogger.debug(logOutput)
     }
     
     static func log(response: URLResponse) {}

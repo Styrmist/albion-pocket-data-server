@@ -41,6 +41,8 @@ public final class PackageLogger {
 //        ])
 //    }
     
+    private init() {}
+    
     @inlinable
     static func trace(_ message: Logger.Message) {
         logger.trace(message)
