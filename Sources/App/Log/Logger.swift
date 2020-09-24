@@ -23,7 +23,8 @@ import Logging
 
 public final class PackageLogger {
     
-    private static let logger = Logger(label: "APDServer.default")
+    //don't use directly
+    public static let logger = Logger(label: "APDServer.default")
     
 //    LoggingSystem.bootstrap { label in
 //        let webhookURL = URL(string:
@@ -41,37 +42,37 @@ public final class PackageLogger {
 //    }
     
     @inlinable
-    static func trace(_ message: String) {
+    static func trace(_ message: Logger.Message) {
         logger.trace(message)
     }
     
     @inlinable
-    static func debug(_ message: String) {
+    static func debug(_ message: Logger.Message) {
         logger.debug(message)
     }
     
     @inlinable
-    static func info(_ message: String) {
+    static func info(_ message: Logger.Message) {
         logger.info(message)
     }
     
     @inlinable
-    static func notice(_ message: String) {
+    static func notice(_ message: Logger.Message) {
         logger.notice(message)
     }
     
     @inlinable
-    static func warning(_ message: String) {
+    static func warning(_ message: Logger.Message) {
         logger.warning(message)
     }
     
     @inlinable
-    static func error(_ message: String) {
+    static func error(_ message: Logger.Message) {
         logger.error(message)
     }
     
     @inlinable
-    static func critical(_ message: String) {
+    static func critical(_ message: Logger.Message) {
         logger.critical(message)
     }
 }
