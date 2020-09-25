@@ -49,9 +49,6 @@ struct NetworkManager {
                         return
                     }
                     do {
-                        PackageLogger.trace(responseData)
-                        let jsonData = try JSONSerialization.jsonObject(with: responseData, options: .mutableContainers)
-                        PackageLogger.trace(jsonData)
                         let apiResponse = try JSONDecoder().decode(CommitElement.self, from: responseData)
                         completion(apiResponse.commit?.author?.date, nil)
                     }catch {

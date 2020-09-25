@@ -54,6 +54,11 @@ public final class PackageLogger {
     }
     
     @inlinable
+    static func debug(_ message: String) {
+        logger.debug(.init(stringLiteral: message))
+    }
+    
+    @inlinable
     static func info(_ message: Logger.Message) {
         logger.info(message)
     }
@@ -69,8 +74,18 @@ public final class PackageLogger {
     }
     
     @inlinable
+    static func warning(_ message: String) {
+        logger.warning(.init(stringLiteral: message))
+    }
+    
+    @inlinable
     static func error(_ message: Logger.Message) {
         logger.error(message)
+    }
+    
+    @inlinable
+    static func error(_ message: String) {
+        logger.error(.init(stringLiteral: message))
     }
     
     @inlinable
