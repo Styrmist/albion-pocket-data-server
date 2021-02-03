@@ -8,24 +8,34 @@
 import Foundation
 
 public enum GithubApi {
-    case lastCommit(user: String, repository: String, filePath: String)
+    case lastCommit(gitPath: GithubPath)
+    case getFileContent(gitPath: GithubPath)
 }
 
 extension GithubApi: EndPointType {
     
-    var environmentBaseURL : String {
-        return "https://api.github.com/repos/"
+    var baseURLString : String {
+        switch self {
+            case .lastCommit:
+                return "https://api.github.com/repos/"
+            case .getFileContent:
+                return "https://raw.githubusercontent.com/"
+        }
     }
     
     var baseURL: URL {
-        guard let url = URL(string: environmentBaseURL) else { fatalError("baseURL could not be configured.")}
+        guard let url = URL(string: baseURLString) else {
+            fatalError("baseURL could not be configured.")
+        }
         return url
     }
     
     var path: String {
         switch self {
-        case .lastCommit(let user, let repository, let filePath):
-            return "\(user)/\(repository)/commits?path=\(filePath)&page=1&per_page=1"
+        case .lastCommit(let gitPath):
+            return "\(gitPath.user)/\(gitPath.repo)/commits?path=\(gitPath.path)&page=1&per_page=1"
+        case .getFileContent(let gitPath):
+            return "\(gitPath.user)/\(gitPath.repo)/\(gitPath.path)"
         }
     }
     
