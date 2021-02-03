@@ -13,15 +13,15 @@ struct CreateLocalisedItemNames: Migration {
         database.schema(LocalisedItem.schema)
             .id()
             .field(.language, .string, .required)
-            .field(.string, .string, .required)
+            .field(.translation, .string, .required)
             .field(.type, .enum(.init(name: "localised_item_type",
                                        cases: LocalisedItemType.allCases.compactMap { $0.rawValue })), .required)
-            .field(.item, .uuid, .references("items", "id"), .required)
+            .field(.item, .uuid, .references(Item.schema, .id), .required)
             .create()
     }
 
     // Optionally reverts the changes made in the prepare method.
     func revert(on database: Database) -> EventLoopFuture<Void> {
-        database.schema(DatabaseTables.localisedItems.rawValue).delete()
+        database.schema(LocalisedItem.schema).delete()
     }
 }

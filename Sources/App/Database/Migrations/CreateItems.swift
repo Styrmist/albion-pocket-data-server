@@ -12,15 +12,14 @@ struct CreateItems: Migration {
     func prepare(on database: Database) -> EventLoopFuture<Void> {
         database.schema(Item.schema)
             .id()
-            .field(.index, .string, .required)
+            .field(.itemIndex, .string, .required)
             .field(.uniqueName, .string, .required)
-            .unique(on: .index)
-            .unique(on: .uniqueName, .index)
+            .unique(on: .itemIndex, .uniqueName)
             .create()
     }
 
     // Optionally reverts the changes made in the prepare method.
     func revert(on database: Database) -> EventLoopFuture<Void> {
-        database.schema(DatabaseTables.items.rawValue).delete()
+        database.schema(Item.schema).delete()
     }
 }

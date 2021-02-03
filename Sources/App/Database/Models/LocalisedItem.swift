@@ -27,8 +27,8 @@ final class LocalisedItem: Model {
 
     @Enum(key: .language)
     var language: LocalisationLanguage
-    @Field(key: .string)
-    var string: String
+    @Field(key: .translation)
+    var translation: String
     @Enum(key: .type)
     var type: LocalisedItemType
 
@@ -36,11 +36,11 @@ final class LocalisedItem: Model {
 
     init(id: UUID? = nil,
          language: LocalisationLanguage,
-         string: String,
+         translation: String,
          type: LocalisedItemType) {
         self.id = id
         self.language = language
-        self.string = string
+        self.translation = translation
         self.type = type
     }
 }

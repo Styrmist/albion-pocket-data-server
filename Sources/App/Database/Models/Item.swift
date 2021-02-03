@@ -16,7 +16,7 @@ final class Item: Model {
     @ID(key: .id)
     var id: UUID?
 
-    @Field(key: .index)
+    @Field(key: .itemIndex)
     var index: String
     @Field(key: .uniqueName)
     var uniqueName: String

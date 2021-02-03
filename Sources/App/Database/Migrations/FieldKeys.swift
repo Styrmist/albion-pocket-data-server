@@ -9,11 +9,11 @@ import Fluent
 
 extension FieldKey {
     // item
-    static var index: Self { "index" }
+    static var itemIndex: Self { "index" }
     static var uniqueName: Self { "unique_name" }
     // localised item
     static var item: Self { "item" }
     static var language: Self { "language" }
-    static var string: Self { "string" }
+    static var translation: Self { "translation" }
     static var type: Self { "type" }
 }

@@ -9,8 +9,7 @@ final class AppSystem {
     }
 
     func connect(_ ws: WebSocket) {
-        var count = 0
-
+        
         ws.onBinary { [unowned self] ws, buffer in
             if let msg = buffer.decodeWebsocketMessage(Connect.self) {
                 let user = UserClient(id: msg.client, socket: ws)
