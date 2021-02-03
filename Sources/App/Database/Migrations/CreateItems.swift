@@ -10,14 +10,12 @@ import Fluent
 struct CreateItems: Migration {
     // Prepares the database for storing Star models.
     func prepare(on database: Database) -> EventLoopFuture<Void> {
-        database.schema(DatabaseTables.items.rawValue)
+        database.schema(Item.schema)
             .id()
-            .field("index", .string)
-            .field("unique_name", .string)
-            .field("localisation_name_key", .string)
-            .field("localisation_description_key", .string)
-//            .field("localised_names", .array(of: .uuid), .references("LocalisedItemNames", "item"))
-//            .field("localised_descriptions", .array(of: .uuid), .references("LocalisedItemDescriptions", "item"))
+            .field(.index, .string, .required)
+            .field(.uniqueName, .string, .required)
+            .unique(on: .index)
+            .unique(on: .uniqueName, .index)
             .create()
     }
 

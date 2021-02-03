@@ -10,29 +10,38 @@ import FluentSQLiteDriver
 import Foundation
 import Vapor
 
-final class LocalisedItem: LocalisedItem {
+enum LocalisedItemType: String, CaseIterable, Codable {
+    case name
+    case description
+}
+
+final class LocalisedItem: Model {
     // Name of the table or collection.
-    static let schema = DatabaseTables.localisedItem.rawValue
+    static let schema = "localised_items"
 
     @ID(key: .id)
     var id: UUID?
  
-    @Parent(key: "item")
+    @Parent(key: .item)
     var item: Item
 
-    @Enum(key: "language")
+    @Enum(key: .language)
     var language: LocalisationLanguage
-    @Field(key: "string")
+    @Field(key: .string)
     var string: String
+    @Enum(key: .type)
+    var type: LocalisedItemType
 
     init() { }
 
     init(id: UUID? = nil,
          language: LocalisationLanguage,
-         string: String) {
+         string: String,
+         type: LocalisedItemType) {
         self.id = id
         self.language = language
         self.string = string
+        self.type = type
     }
 }
 
