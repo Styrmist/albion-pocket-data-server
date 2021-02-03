@@ -99,8 +99,7 @@ func localisedItems(for item: GitItem) -> [LocalisedItem] {
 //MARK: Migrations
 func performAllMigrations(_ app: Application) throws {
 
-    app.migrations.add(CreateItems())
-    app.migrations.add(CreateLocalisedItemNames())
+    app.migrations.add(InitialMigration())
     try app.autoMigrate().wait()
 }
 

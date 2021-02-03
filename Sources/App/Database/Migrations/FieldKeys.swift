@@ -12,7 +12,7 @@ extension FieldKey {
     static var itemIndex: Self { "index" }
     static var uniqueName: Self { "unique_name" }
     // localised item
-    static var item: Self { "item" }
+    static var itemId: Self { "item_id" }
     static var language: Self { "language" }
     static var translation: Self { "translation" }
     static var type: Self { "type" }

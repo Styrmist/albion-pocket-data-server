@@ -27,7 +27,7 @@ final class AppSystem {
                 print(json)
                 ws.send(json.connect.description)
             } catch {
-                print(count)
+                print()
             }
             
         }

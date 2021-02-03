@@ -22,8 +22,8 @@ final class LocalisedItem: Model {
     @ID(key: .id)
     var id: UUID?
  
-    @Parent(key: .item)
-    var item: Item
+    @Parent(key: .itemId)
+    var itemId: Item
 
     @Enum(key: .language)
     var language: LocalisationLanguage

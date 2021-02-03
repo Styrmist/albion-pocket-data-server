@@ -20,7 +20,7 @@ final class Item: Model {
     var index: String
     @Field(key: .uniqueName)
     var uniqueName: String
-    @Children(for: \.$item) 
+    @Children(for: \.$itemId)
     var localised: [LocalisedItem]
 
     //for fluent
