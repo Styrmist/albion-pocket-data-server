@@ -1,6 +1,7 @@
-//import Fluent
-//import FluentPostgresDriver
+import Fluent
 import Vapor
+import FluentSQLiteDriver  // added
+import PromiseKit
 
 public func configure(_ app: Application) throws {
     
@@ -10,16 +11,17 @@ public func configure(_ app: Application) throws {
     
     if environment.isRelease {
         app.http.server.configuration.hostname = "127.0.0.1"
-        app.http.server.configuration.port = 9876
+        app.http.server.configuration.port = 9877
     } else {
         app.http.server.configuration.hostname = "127.0.0.1"
-        app.http.server.configuration.port = 9876
+        app.http.server.configuration.port = 9877
     }
-    
+
+    app.logger.logLevel = .warning
     
     let appSystem = AppSystem(eventLoop: app.eventLoopGroup.next())
     try routes(app, appSystem: appSystem)
-    
+
     // uncomment to serve files from /Public folder
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 

@@ -7,11 +7,6 @@
 
 import Foundation
 
-enum NetworkEnvironment {
-    case production
-    case staging
-}
-
 enum NetworkResponse:String {
     case success
     case authenticationError = "You need to be authenticated first."
@@ -29,11 +24,11 @@ enum Result<String>{
 }
 
 struct NetworkManager {
-    static let environment : NetworkEnvironment = .production
+
     let router = Router<GithubApi>()
-    //case .lastCommit(let user, let repository, let filePath):
-    func getLastCommit(user: String, repository: String, filePath: String, completion: @escaping (_ commit: Date?,_ error: String?)->()){
-        router.request(.lastCommit(user: user, repository: repository, filePath: filePath)) { data, response, error in
+
+    func getLastCommit(gitPath: GithubPath, completion: @escaping (_ commit: Date?,_ error: String?)->()){
+        router.request(.lastCommit(gitPath: gitPath)) { data, response, error in
             if error != nil {
                 PackageLogger.warning(NetworkResponse.noNetworkConnection.rawValue)
                 completion(nil, NetworkResponse.noNetworkConnection.rawValue)
