@@ -57,6 +57,37 @@ struct NetworkManager {
             }
         }
     }
+
+    func getFileContent(gitPath: GithubPath, completion: @escaping (_ items: [GitItem]?,_ error: String?)->()){
+        router.request(.getFileContent(gitPath: gitPath)) { data, response, error in
+            if error != nil {
+                PackageLogger.warning(NetworkResponse.noNetworkConnection.rawValue)
+                completion(nil, NetworkResponse.noNetworkConnection.rawValue)
+            }
+
+            if let response = response as? HTTPURLResponse {
+                let result = self.handleNetworkResponse(response)
+                switch result {
+                    case .success:
+                        guard let responseData = data else {
+                            PackageLogger.warning(NetworkResponse.noData.rawValue)
+                            completion(nil, NetworkResponse.noData.rawValue)
+                            return
+                        }
+                        do {
+                            let gitItems = try JSONDecoder().decode([GitItem].self, from: responseData)
+                            completion(gitItems, nil)
+                        }catch {
+                            PackageLogger.warning(NetworkResponse.unableToDecode.rawValue)
+                            completion(nil, NetworkResponse.unableToDecode.rawValue)
+                        }
+                    case .failure(let networkFailureError):
+                        PackageLogger.warning(networkFailureError)
+                        completion(nil, networkFailureError)
+                }
+            }
+        }
+    }
     
     fileprivate func handleNetworkResponse(_ response: HTTPURLResponse) -> Result<String>{
         switch response.statusCode {
