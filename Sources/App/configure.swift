@@ -39,42 +39,18 @@ public func configure(_ app: Application) throws {
             return
         }
 
-        for gitItem in gitItems {
-            let item = Item(gitItem: gitItem)
-            try? save([item], to: app.db)
-            let localisedItemNames = gitItem.localisedNames?.localisation.compactMap { dict -> LocalisedItemName in
-                return LocalisedItemName(language: dict.key, string: dict.value)
+        app.db.transaction { database -> EventLoopFuture<Void> in
+            let operations: [EventLoopFuture<Void>] = gitItems.compactMap { gitItem in
+                let item = Item(gitItem: gitItem)
+                return item.create(on: database).flatMap { _ in
+                    return item.$localised.create(localisedItems(for: gitItem), on: database)//.transform(to: ())
+                }
             }
-            if let localisedItemNames = localisedItemNames {
-                try? save(item.$localisedNames, objects: localisedItemNames, to: app.db).wait()
-            }
-
-            let localisedItemDescriptions = gitItem.localisedDescriptions?.localisation.compactMap { dict -> LocalisedItemDescription in
-                return LocalisedItemDescription(language: dict.key, string: dict.value)
-            }
-
-            if let localisedItemDescriptions = localisedItemDescriptions {
-                try? save(item.$localisedDescriptions, objects: localisedItemDescriptions, to: app.db).wait()
-            }
+            return operations.flatten(on: database.eventLoop)
+        }.whenComplete { result in
+            print(result)
         }
     }
-
-    //        app.db(.sqlite).transaction { database -> EventLoopFuture<Void> in
-    //            var test = [EventLoopFuture<Void>]()
-    //            for (item, _, _) in items {
-    //                test.append(item.save(on: database))
-    //            }
-    //            return .andAllComplete(test, on: eventLoop)
-    //        }.always { _ in
-    //            app.db(.sqlite).transaction { database -> EventLoopFuture<Void> in
-    //                var test1 = [EventLoopFuture<Void>]()
-    //                for (item, names, descriptions) in items {
-    //                    test1.append(item.$localisedNames.create(names, on: database))
-    //                    test1.append(item.$localisedDescriptions.create(descriptions, on: database))
-    //                }
-    //                return .andAllComplete(test1, on: eventLoop)
-    //            }
-    //        }
 
     // uncomment to serve files from /Public folder
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
@@ -89,35 +65,41 @@ public func configure(_ app: Application) throws {
 //    app.migrations.add(CreateTodo())
 }
 
+@discardableResult
 func save<T: Model>(_ objects: T..., to db: Database) -> EventLoopFuture<Void> {
-    return db.transaction { database -> EventLoopFuture<Void> in
+    return db.transaction { database in
         objects.create(on: database)
     }
 }
 
-func save<U: LocalisedItem, T: ChildrenProperty<Item, U>>(_ object: Item, children: [U], to db: Database) -> EventLoopFuture<Void> {
-    try? save(object, to: db).wait()
-    return db.transaction { database in
-        if let names = children as [LocalisedItemName] {
-            object.$localisedNames.create(children, on: database)
-        } else if let descriptions = children as [LocalisedItemDescription] {
-            object.$localisedDescriptions.create(children, on: database)
-        }
-    }
-}
+//@discardableResult
+//func save(_ object: Item, children: [LocalisedItem], type: LocalisedItemType, to db: Database) -> EventLoopFuture<Void> {
+//    return db.transaction { database in
+//        switch type {
+//            case .name:
+//                return object.$localisedNames.create(children, on: database)
+//            case .description:
+//                return object.$localisedDescriptions.create(children, on: database)
+//        }
+//    }
+//}
 
-func save<U: LocalisedItem, T: ChildrenProperty<Item, U>>(_ children: T, objects: [U], to db: Database) -> EventLoopFuture<Void> {
-    return db.transaction { database -> EventLoopFuture<Void> in
-        children.create(objects, on: database)
+func localisedItems(for item: GitItem) -> [LocalisedItem] {
+
+    var localisedItems = [LocalisedItem]()
+    item.localisedNames?.localisation.forEach { dict in
+        localisedItems.append(LocalisedItem(language: dict.key, translation: dict.value, type: .name))
     }
+    item.localisedDescriptions?.localisation.forEach { dict in
+        localisedItems.append(LocalisedItem(language: dict.key, translation: dict.value, type: .description))
+    }
+    return localisedItems
 }
 
 //MARK: Migrations
 func performAllMigrations(_ app: Application) throws {
 
     app.migrations.add(CreateItems())
-//    app.migrations.add(CreateLocalisationLanguages())
-    app.migrations.add(CreateLocalisedItemDescriptions())
     app.migrations.add(CreateLocalisedItemNames())
     try app.autoMigrate().wait()
 }
