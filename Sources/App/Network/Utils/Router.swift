@@ -19,7 +19,6 @@ class Router<EndPoint: EndPointType>: NetworkRouter {
                 completion(data, response, error)
             })
         }catch {
-            PackageLogger.error(error.localizedDescription)
             completion(nil, nil, error)
         }
         self.task?.resume()
@@ -60,7 +59,6 @@ class Router<EndPoint: EndPointType>: NetworkRouter {
             }
             return request
         } catch {
-            PackageLogger.error(error.localizedDescription)
             throw error
         }
     }
@@ -73,14 +71,12 @@ class Router<EndPoint: EndPointType>: NetworkRouter {
             try bodyEncoding.encode(urlRequest: &request,
                                     bodyParameters: bodyParameters, urlParameters: urlParameters)
         } catch {
-            PackageLogger.error(error.localizedDescription)
             throw error
         }
     }
     
     fileprivate func addAdditionalHeaders(_ additionalHeaders: HTTPHeaders?, request: inout URLRequest) {
         guard let headers = additionalHeaders else {
-            PackageLogger.warning("No headers added")
             return
         }
         for (key, value) in headers {

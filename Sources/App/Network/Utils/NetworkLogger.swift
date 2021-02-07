@@ -9,8 +9,7 @@ import Foundation
 
 class NetworkLogger {
     static func log(request: URLRequest) {
-        PackageLogger.debug("Outgoing request: \(request)")
-        
+
         let urlAsString = request.url?.absoluteString ?? ""
         let urlComponents = NSURLComponents(string: urlAsString)
         
@@ -30,8 +29,6 @@ class NetworkLogger {
         if let body = request.httpBody {
             logOutput += "\n \(NSString(data: body, encoding: String.Encoding.utf8.rawValue) ?? "")"
         }
-        
-        PackageLogger.debug(logOutput)
     }
     
     static func log(response: URLResponse) {}

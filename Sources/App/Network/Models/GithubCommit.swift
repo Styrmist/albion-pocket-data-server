@@ -13,7 +13,7 @@ struct CommitElement: Codable {
     let commit: CommitClass?
     let url, htmlURL, commentsURL: String?
     let author, committer: CommitAuthor?
-    let parents: [Parent]?
+//    let parents: [Parent]?
 }
 
 // MARK: - CommitAuthor
@@ -61,7 +61,7 @@ struct Verification: Codable {
 }
 
 // MARK: - Parent
-struct Parent: Codable {
-    let sha: String?
-    let url, htmlURL: String?
-}
+//struct Parent: Codable {
+//    let sha: String?
+//    let url, htmlURL: String?
+//}

@@ -40,7 +40,6 @@ public enum ParameterEncoding {
                 
             }
         }catch {
-            PackageLogger.warning("Encoding failed with error: \(error)")
             throw error
         }
     }
