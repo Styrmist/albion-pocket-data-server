@@ -40,6 +40,11 @@ final class Item: Model {
         self.index = gitItem.index
         self.uniqueName = gitItem.uniqueName
     }
+
+    func update(with gitItem: GitItem) {
+        self.index = gitItem.index
+        self.uniqueName = gitItem.uniqueName
+    }
 }
 
 extension Item: Content { }
